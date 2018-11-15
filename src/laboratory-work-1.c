@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <stdlib.h>
 #include "laboratory-work-1.h"
@@ -10,8 +11,16 @@ int main()
 { 
     const int file_count = get_file_count(CURRENT_DIRECTORY);
     struct dirent* directory_entries = get_directory_content(CURRENT_DIRECTORY);
+    struct stat file_stat;
     for (int i = 0; i < file_count; i++) {
-        puts(directory_entries[i].d_name);   
+        const char* file_name = directory_entries[i].d_name;
+        int file_creation_time = get_file_creation_time(file_name);
+        if (is_directory(file_name)) {
+            printf("d ");
+        } else {
+            printf("f ");
+        }
+        printf("%d %s\n", file_creation_time, file_name);   
     }
 
     return 0;
@@ -55,4 +64,23 @@ int get_file_count(const char* directory_path)
     closedir(directory);
 
     return file_count;
+}
+
+int get_file_creation_time(const char* file_name)
+{
+    struct stat file_stat;
+    stat(file_name, &file_stat);
+    return file_stat.st_ctime;   
+}
+
+int is_directory(const char *file_name) 
+{
+   struct stat file_stat;
+   stat(file_name, &file_stat);
+   return S_ISDIR(file_stat.st_mode);
+}
+
+int compare_files(const void* first_file, const void* second_file)
+{
+    return 1;
 }
