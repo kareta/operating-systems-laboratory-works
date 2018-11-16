@@ -1,20 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-char* reverse_string(char* str);
-
-void validate_arguments_number();
-
-void validate_file_opened(FILE* file);
-
-long get_file_length(FILE* file);
+#include "laboratory-work-3.h"
 
 int main(int argc, char* argv[]) 
 { 
     validate_arguments_number(argc);
 
-    const char* filename = argv[1]; 
+    char* filename = argv[1]; 
+    char* buffer = read_file(filename);
+    
+    char* reversed_buffer = reverse_string(buffer);
+    write_file(filename, reversed_buffer);
+
+    return 0;
+}
+
+void write_file(char* filename, char* content)
+{
+    FILE *file = fopen(filename, "wb");
+    if (file != NULL) {
+        fputs(content, file);
+        fclose(file);
+    }
+}
+
+char* read_file(char* filename)
+{
     FILE* file = fopen(filename, "rb");
     validate_file_opened(file);
 
@@ -28,11 +40,7 @@ int main(int argc, char* argv[])
 
     fread(buffer, 1, length, file);
     fclose(file);
-    
-    char* reversed_buffer = reverse_string(buffer);
-    puts(reversed_buffer);
-
-    return 0;
+    return buffer;
 }
 
 long get_file_length(FILE* file)

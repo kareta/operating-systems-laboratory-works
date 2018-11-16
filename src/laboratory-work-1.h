@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef LABORATORY_WORK_1_H
+#define LABORATORY_WORK_1_H
 
 #include <dirent.h>
 
